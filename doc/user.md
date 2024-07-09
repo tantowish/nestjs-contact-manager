@@ -18,6 +18,7 @@ Response Body (Success) :
 
 ```
 {
+	"message": "Register User Success"
 	"data": {
 		"username": "tantows001",
 		"name": "Tantowi Shah Hanif",
@@ -43,8 +44,7 @@ Request Body :
 ```
 {
 	"username": "tantows001",
-	"password": "12354",
-	"name": "Tantowi Shah Hanif"
+	"password": "12354"
 }
 ```
 
@@ -52,9 +52,11 @@ Response Body (Success) :
 
 ```
 {
+	"message": "Login User Success"
 	"data": {
 		"username": "tantows001",
-		"name": "Tantowi Shah Hanif"
+		"name": "Tantowi Shah Hanif",
+		"token": "21sad231-sadas131-sadaf21da2"
 	}
 }
 ```
@@ -79,10 +81,11 @@ Response Body (Success) :
 
 ```
 {
+	"message": "Get User Success"
 	"data": {
 		"username": "tantows001",
 		"name": "Tantowi Shah Hanif",
-		"token": uuid
+		"token": "21sad231-sadas131-sadaf21da2"
 	}
 }
 ```
@@ -94,7 +97,6 @@ Response Body (Failed) :
 	"errors": "User is not found, ..."
 }
 ```
-
 
 ### Update User
 
@@ -117,9 +119,11 @@ Response Body (Success) :
 
 ```
 {
+	"message": "Update User Success"
 	"data": {
 		"username": "tantows001",
-		"name": "Tantowi Shah Hanif"
+		"name": "Tantowi Shah Hanif",
+		"token": "2131onoasd-12o10301-sadasio1"
 	}
 }
 ```
@@ -144,7 +148,7 @@ Response Body (Success) :
 
 ```
 {
-	"message": "success"
+	"message": "Logout User Success"
 }
 ```
 

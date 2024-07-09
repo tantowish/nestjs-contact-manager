@@ -12,9 +12,20 @@ export type UserResponse = {
     token?: string
 }
 
+export type LoginUserRequest = {
+    username: string;
+    password: string;
+}
+
+export type UpdateUserRequest = {
+    password?: string
+    name?: string
+}
+
 export function toUserResponse(user: User): UserResponse {
     return {
         username: user.username,
-        name: user.name
+        name: user.name,
+        ...(user.token && { token: user.token }),
     }
 }
