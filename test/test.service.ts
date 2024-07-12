@@ -28,4 +28,32 @@ export class TestService{
             }
         })
     }
+
+    async getUser(){
+        await this.prismaService.user.findUnique({
+            where: {
+                username: "test"
+            }
+        })
+    }
+
+    async deleteContact(){
+        await this.prismaService.contact.deleteMany({
+            where: {
+                username: "test"
+            }
+        })
+    }
+
+    async createContact(){
+        return await this.prismaService.contact.create({
+            data:{
+                username: "test",
+                firstName: "test",
+                lastName: "test",
+                email: "test@gmail.com",
+                phone: '0811111'
+            }
+        })
+    }
 }

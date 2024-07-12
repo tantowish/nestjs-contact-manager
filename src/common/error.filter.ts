@@ -11,8 +11,9 @@ export class ErrorFilter implements ExceptionFilter {
                 errors: exception.getResponse()
             })
         } else if(exception instanceof ZodError){
+            const errorMessage = JSON.parse(exception.message)
             response.status(400).json({
-                errors: JSON.parse(exception.message)
+                errors: errorMessage
             })
         } else {
             response.status(500).json({
