@@ -85,6 +85,7 @@ export class ContactController {
             page: page || 1,
             size: size || 10
         }
+
         const result = this.contactService.search(user, request)
         return result
     }

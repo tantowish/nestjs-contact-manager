@@ -56,4 +56,17 @@ export class TestService{
             }
         })
     }
+
+    async createAddress(contactId: number){
+        return await this.prismaService.address.create({
+            data: {
+                contactId: contactId,
+                street: 'test',
+                city: 'test',
+                province: 'test',
+                country: 'test',
+                postalCode: 'test'
+            }
+        })
+    }
 }

@@ -4,11 +4,9 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston'
 import { ValidationService } from 'src/common/validation.service';
 import { ContactResponse, CreateContactRequest, SearchContactRequest, toContactArrayResponse, toContactResponse, UpdateContactRequest } from 'src/model/contact.model';
-import { User } from '@prisma/client';
+import { Contact, User } from '@prisma/client';
 import { ContactValidation } from './contact.validation';
-import { UpdateUserRequest } from 'src/model/user.model';
 import { WebResponse } from 'src/model/web.model';
-import { filter } from 'rxjs';
 
 @Injectable()
 export class ContactService {
@@ -18,7 +16,7 @@ export class ContactService {
         private prismaService: PrismaService
     ){}
 
-    async checkContactExist(contactId: number, username: string) {
+    async checkContactExist(contactId: number, username: string): Promise<Contact> {
         const contact = await this.prismaService.contact.findUnique({
             where:{
                 id: contactId,
