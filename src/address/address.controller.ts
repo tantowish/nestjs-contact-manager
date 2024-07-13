@@ -19,7 +19,6 @@ import {
   UpdateAddressRequest,
 } from 'src/model/address.model';
 import { Auth } from 'src/common/auth.decorator';
-import { request } from 'http';
 import { User } from '@prisma/client';
 
 @Controller('/api/contacts/:contactId/addresses')

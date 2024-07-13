@@ -5,7 +5,7 @@ import { Logger } from 'winston';
 
 @Injectable()
 export class PrismaService
-  extends PrismaClient<Prisma.PrismaClientOptions, String>
+  extends PrismaClient<Prisma.PrismaClientOptions, string>
   implements OnModuleInit
 {
   constructor(

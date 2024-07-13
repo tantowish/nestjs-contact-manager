@@ -6,7 +6,6 @@ import {
   HttpCode,
   Patch,
   Post,
-  Put,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { WebResponse } from 'src/model/web.model';

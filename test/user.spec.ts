@@ -224,7 +224,7 @@ describe('User Controller', () => {
     });
 
     it('should be able to logout user', async () => {
-      let response = await request(app.getHttpServer())
+      const response = await request(app.getHttpServer())
         .delete('/api/users')
         .set('Authorization', 'test');
 

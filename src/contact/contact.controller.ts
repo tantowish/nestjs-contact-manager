@@ -4,14 +4,11 @@ import {
   Delete,
   Get,
   HttpCode,
-  HttpException,
-  HttpStatus,
   Param,
   ParseIntPipe,
   Post,
   Put,
   Query,
-  Search,
 } from '@nestjs/common';
 import { ContactService } from './contact.service';
 import { Auth } from 'src/common/auth.decorator';
@@ -78,7 +75,7 @@ export class ContactController {
     @Auth() user: User,
     @Param('contactId', ParseIntPipe) contactId: number,
   ): Promise<WebResponse<ContactResponse>> {
-    const result = await this.contactService.delete(user, contactId);
+    await this.contactService.delete(user, contactId);
     return {
       message: 'Delete Contact Success',
     };

@@ -335,13 +335,12 @@ describe('Address Controller', () => {
 
   describe('GET /api/contacts/:contactId/addresses', () => {
     let contact: Contact;
-    let address: Address;
     beforeEach(async () => {
       await testService.deleteContact();
       await testService.deleteUser();
       await testService.createUser();
       contact = await testService.createContact();
-      address = await testService.createAddress(contact.id);
+      await testService.createAddress(contact.id);
     });
 
     it('should be rejected if the authorization is invalid', async () => {

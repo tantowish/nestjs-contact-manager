@@ -257,12 +257,11 @@ describe('Contact Controller', () => {
   });
 
   describe('GET /api/contacts', () => {
-    let contact;
     beforeEach(async () => {
       await testService.deleteContact();
       await testService.deleteUser();
       await testService.createUser();
-      contact = await testService.createContact();
+      await testService.createContact();
     });
 
     it('should be rejected if the authorization is invalid', async () => {
