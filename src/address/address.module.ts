@@ -6,6 +6,6 @@ import { ContactModule } from 'src/contact/contact.module';
 @Module({
   imports: [ContactModule],
   controllers: [AddressController],
-  providers: [AddressService]
+  providers: [AddressService],
 })
 export class AddressModule {}

@@ -1,105 +1,155 @@
 import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/common/prisma.service';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { Logger } from 'winston'
+import { Logger } from 'winston';
 import { AddressValidation } from './address.validation';
 import { Address, User } from '@prisma/client';
-import { AddressResponse, CreateAddressRequest, DeleteAddressRequest, GetAddressRequest, toAddressArrayResponse, toAddressResponse, UpdateAddressRequest } from 'src/model/address.model';
+import {
+  AddressResponse,
+  CreateAddressRequest,
+  DeleteAddressRequest,
+  GetAddressRequest,
+  toAddressArrayResponse,
+  toAddressResponse,
+  UpdateAddressRequest,
+} from 'src/model/address.model';
 import { ValidationService } from 'src/common/validation.service';
 import { ContactService } from 'src/contact/contact.service';
 
 @Injectable()
 export class AddressService {
-    constructor(
-        private validationService: ValidationService,
-        @Inject(WINSTON_MODULE_PROVIDER) private logger: Logger,
-        private prismaService: PrismaService,
-        private contactService: ContactService
-    ){}
+  constructor(
+    private validationService: ValidationService,
+    @Inject(WINSTON_MODULE_PROVIDER) private logger: Logger,
+    private prismaService: PrismaService,
+    private contactService: ContactService,
+  ) {}
 
-    async checkAddressExist(addressId: number, contactId: number, username: string): Promise<Address>{
-        await this.contactService.checkContactExist(contactId, username)
+  async checkAddressExist(
+    addressId: number,
+    contactId: number,
+    username: string,
+  ): Promise<Address> {
+    await this.contactService.checkContactExist(contactId, username);
 
-        const address = await this.prismaService.address.findUnique({
-            where: {
-                id: addressId,
-                contactId: contactId
-            }
-        })
+    const address = await this.prismaService.address.findUnique({
+      where: {
+        id: addressId,
+        contactId: contactId,
+      },
+    });
 
-        if(!address) {
-            throw new HttpException("Address is not found", 404)
-        }
-
-        return address
+    if (!address) {
+      throw new HttpException('Address is not found', 404);
     }
 
-    async create(user: User, request: CreateAddressRequest): Promise<AddressResponse>{
-        this.logger.debug(`Create new address for contactId ${request.contactId} with data ${JSON.stringify(request)}`)
+    return address;
+  }
 
-        const addressRequest:CreateAddressRequest = this.validationService.validate(AddressValidation.CREATE, request)
+  async create(
+    user: User,
+    request: CreateAddressRequest,
+  ): Promise<AddressResponse> {
+    this.logger.debug(
+      `Create new address for contactId ${request.contactId} with data ${JSON.stringify(request)}`,
+    );
 
-        await this.contactService.checkContactExist(addressRequest.contactId, user.username)
+    const addressRequest: CreateAddressRequest =
+      this.validationService.validate(AddressValidation.CREATE, request);
 
-        const address = await this.prismaService.address.create({
-            data: addressRequest
-        })
+    await this.contactService.checkContactExist(
+      addressRequest.contactId,
+      user.username,
+    );
 
-        return toAddressResponse(address)
-    }
+    const address = await this.prismaService.address.create({
+      data: addressRequest,
+    });
 
-    async get(user: User, request: GetAddressRequest): Promise<AddressResponse>{
-        this.logger.debug(`Get address with contactId ${request.contactId} for addressId ${request.contactId}`)
+    return toAddressResponse(address);
+  }
 
-        const addressRequest: GetAddressRequest = this.validationService.validate(AddressValidation.GET, request)
+  async get(user: User, request: GetAddressRequest): Promise<AddressResponse> {
+    this.logger.debug(
+      `Get address with contactId ${request.contactId} for addressId ${request.contactId}`,
+    );
 
-        const address = await this.checkAddressExist(addressRequest.addressId, addressRequest.contactId, user.username)
-        return toAddressResponse(address)
-    }
+    const addressRequest: GetAddressRequest = this.validationService.validate(
+      AddressValidation.GET,
+      request,
+    );
 
-    async update(user: User, request: UpdateAddressRequest): Promise<AddressResponse>{
-        this.logger.debug(`Update address for id ${request.id} with data ${JSON.stringify(request)}`)
+    const address = await this.checkAddressExist(
+      addressRequest.addressId,
+      addressRequest.contactId,
+      user.username,
+    );
+    return toAddressResponse(address);
+  }
 
-        const addressRequest: UpdateAddressRequest = this.validationService.validate(AddressValidation.UPDATE, request)
+  async update(
+    user: User,
+    request: UpdateAddressRequest,
+  ): Promise<AddressResponse> {
+    this.logger.debug(
+      `Update address for id ${request.id} with data ${JSON.stringify(request)}`,
+    );
 
-        let address = await this.checkAddressExist(addressRequest.id, addressRequest.contactId, user.username)
-        address = await this.prismaService.address.update({
-            where: {
-                id: addressRequest.id,
-                contactId: addressRequest.contactId
-            },
-            data: addressRequest
-        }) 
+    const addressRequest: UpdateAddressRequest =
+      this.validationService.validate(AddressValidation.UPDATE, request);
 
-        return toAddressResponse(address)
-    }
+    let address = await this.checkAddressExist(
+      addressRequest.id,
+      addressRequest.contactId,
+      user.username,
+    );
+    address = await this.prismaService.address.update({
+      where: {
+        id: addressRequest.id,
+        contactId: addressRequest.contactId,
+      },
+      data: addressRequest,
+    });
 
-    async delete(user: User, request: DeleteAddressRequest): Promise<AddressResponse>{
-        this.logger.debug(`Delete address with contactId ${request.contactId} for addressId ${request.contactId}`)
+    return toAddressResponse(address);
+  }
 
-        const addressRequest: DeleteAddressRequest = this.validationService.validate(AddressValidation.DELETE, request)
+  async delete(
+    user: User,
+    request: DeleteAddressRequest,
+  ): Promise<AddressResponse> {
+    this.logger.debug(
+      `Delete address with contactId ${request.contactId} for addressId ${request.contactId}`,
+    );
 
-        let address = await this.checkAddressExist(addressRequest.addressId, addressRequest.contactId, user.username)
-        address  = await this.prismaService.address.delete({
-            where: {
-                id: addressRequest.addressId,
-                contactId: addressRequest.contactId
-            }
-        })
+    const addressRequest: DeleteAddressRequest =
+      this.validationService.validate(AddressValidation.DELETE, request);
 
-        return toAddressResponse(address)
-    }
+    let address = await this.checkAddressExist(
+      addressRequest.addressId,
+      addressRequest.contactId,
+      user.username,
+    );
+    address = await this.prismaService.address.delete({
+      where: {
+        id: addressRequest.addressId,
+        contactId: addressRequest.contactId,
+      },
+    });
 
-    async list(user: User, contactId: number): Promise<AddressResponse[]> {
-        this.logger.debug(`Get list address with contactId ${contactId}`)
+    return toAddressResponse(address);
+  }
 
-        await this.contactService.checkContactExist(contactId, user.username)
-        const addresses = await this.prismaService.address.findMany({
-            where:{
-                contactId: contactId
-            }
-        })
+  async list(user: User, contactId: number): Promise<AddressResponse[]> {
+    this.logger.debug(`Get list address with contactId ${contactId}`);
 
-        return toAddressArrayResponse(addresses)
-    }
+    await this.contactService.checkContactExist(contactId, user.username);
+    const addresses = await this.prismaService.address.findMany({
+      where: {
+        contactId: contactId,
+      },
+    });
+
+    return toAddressArrayResponse(addresses);
+  }
 }
